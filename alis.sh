@@ -166,7 +166,7 @@ function check_variables() {
     check_variables_value "HOOKS" "$HOOKS"
     check_variables_list "BOOTLOADER" "$BOOTLOADER" "grub refind systemd"
     check_variables_list "CUSTOM_SHELL" "$CUSTOM_SHELL" "bash zsh dash fish"
-    check_variables_list "DESKTOP_ENVIRONMENT" "$DESKTOP_ENVIRONMENT" "gnome kde xfce mate cinnamon lxde i3-wm i3-gaps" "false"
+    check_variables_list "DESKTOP_ENVIRONMENT" "$DESKTOP_ENVIRONMENT" "gnome gnome-minimal kde xfce mate cinnamon lxde i3-wm i3-gaps" "false"
     check_variables_boolean "PACKAGES_MULTILIB" "$PACKAGES_MULTILIB"
     check_variables_boolean "PACKAGES_INSTALL" "$PACKAGES_INSTALL"
     check_variables_boolean "VAGRANT" "$VAGRANT"
@@ -1497,6 +1497,9 @@ function desktop_environment() {
         "gnome" )
             desktop_environment_gnome
             ;;
+        "gnome-minimal" )
+            desktop_environment_gnome_minimal
+            ;;
         "kde" )
             desktop_environment_kde
             ;;
@@ -1524,7 +1527,13 @@ function desktop_environment() {
 }
 
 function desktop_environment_gnome() {
-    pacman_install "gdm gnome-desktop gnome-shell gnome-shell-extensions"
+    pacman_install "gnome"
+
+    arch-chroot /mnt systemctl enable gdm.service
+}
+
+function desktop_environment_gnome_minimal() {
+    pacman_install "gdm gnome-control-center gnome-desktop gnome-keyring gnome-logs gnome-menus gnome-screenshot gnome-shell gnome-shell-extensions gnome-system-monitor gnome-tweaks gnome-user-docs gnome-user-share gnome-getting-started-docs gnome-font-viewer nautilus gnome-screenshot gnome-disk-utility baobab"
 
     arch-chroot /mnt systemctl enable gdm.service
 }
